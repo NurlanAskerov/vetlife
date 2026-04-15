@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VetLife Hospital</title>
+  
+  <link rel="icon" href="/images/logo vet.jpg" type="image/jpeg" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #E8D7D0;
+      --bg-soft: #F4E8E3;
+      --primary: #2BC4DE;
+      --primary-dark: #1EA9C0;
+      --primary-soft: #DDF9FD;
+      --text: #3A302E;
+      --muted: #7E6C68;
+      --white: #ffffff;
+      --border: rgba(58, 48, 46, 0.10);
+      --shadow: 0 18px 40px rgba(58, 48, 46, 0.10);
+      --radius: 24px;
+      --wa-green: #25D366;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #F7F0ED 0%, var(--bg) 100%);
+      overflow-x: hidden;
+      padding-bottom: 0;
+    }
+    h1, h2, h3, .brand-text { font-family: Georgia, "Times New Roman", serif; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button, input, select, textarea { font-family: inherit; }
+    .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+    /* Top Navbar */
+    .navbar {
+      position: sticky; top: 0; z-index: 1000;
+      backdrop-filter: blur(14px);
+      background: rgba(247, 240, 237, 0.82);
+      border-bottom: 1px solid rgba(58, 48, 46, 0.08);
+    }
+    .nav-inner {
+      height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img {
+      width: 52px; height: 52px; object-fit: cover; border-radius: 50%; /* Tam yumru edildi */
+      background: rgba(255,255,255,0.5); padding: 3px;
+    }
+    .brand-text { font-size: 28px; font-weight: 700; color: var(--primary-dark); }
+    .nav-links { display: flex; gap: 26px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 700; color: var(--text); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--primary-dark); }
+
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    
+    /* Language Switcher */
+    .lang-switcher {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(43, 196, 222, 0.4);
+      color: var(--primary-dark);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+      transition: 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+      text-align: center;
+    }
+    .lang-switcher:hover { background: var(--white); border-color: var(--primary-dark); }
+    
+    .btn, .btn-outline {
+      border-radius: 999px; padding: 13px 22px; font-size: 14px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: .2s;
+      border: none; cursor: pointer;
+    }
+    .btn { background: var(--primary); color: var(--white); box-shadow: 0 10px 24px rgba(43, 196, 222, 0.22); }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--primary-dark); border: 2px solid var(--primary-dark); }
+    .btn-outline:hover { background: var(--primary-dark); color: var(--white); }
+
+    /* Hero Section */
+    .hero { padding: 70px 0 38px; position: relative; }
+    .hero-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 36px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px;
+      background: rgba(255,255,255,0.55); color: var(--primary-dark); font-size: 13px; font-weight: 700;
+      margin-bottom: 18px; white-space: nowrap; /* Yazının 2 sətrə bölünməsinin qarşısını alır */
+    }
+    .eyebrow span { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+    .hero h1 { font-size: clamp(32px, 5vw, 64px); line-height: 1.1; margin-bottom: 18px; }
+    .hero h1 em { font-style: normal; color: var(--primary-dark); }
+    .hero p { font-size: 17px; line-height: 1.8; color: var(--muted); max-width: 620px; margin-bottom: 28px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+    .hero-card {
+      background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 34px; padding: 24px; box-shadow: var(--shadow);
+    }
+    .logo-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.52));
+      border-radius: 28px; padding: 18px; margin-bottom: 18px; border: 1px solid rgba(58,48,46,0.06);
+    }
+    .slider-container { width: 100%; height: 380px; overflow: hidden; border-radius: 22px; position: relative; background: #E7D5CE; }
+    .slider-track { display: flex; height: 100%; width: 100%; transition: transform 0.6s ease-in-out; }
+    .slider-track img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .stat { background: rgba(43, 196, 222, 0.12); border-radius: 18px; text-align: center; padding: 15px 10px; }
+    .stat strong { display: block; font-size: 23px; color: var(--primary-dark); margin-bottom: 4px; }
+    .stat span { font-size: 12px; color: var(--muted); font-weight: 700; }
+
+    /* Infinite Marquee */
+    .marquee-section {
+      background: rgba(43, 196, 222, 0.1); padding: 20px 0; border-top: 1px solid rgba(43, 196, 222, 0.2);
+      border-bottom: 1px solid rgba(43, 196, 222, 0.2); overflow: hidden; display: flex; white-space: nowrap;
+    }
+    .marquee-content { display: flex; gap: 16px; animation: scroll 25s linear infinite; }
+    .marquee-item {
+      background: var(--primary-dark); color: var(--white); padding: 10px 24px;
+      border-radius: 999px; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
+    }
+    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* Sections */
+    .section { padding: 74px 0; }
+    .section-soft { background: rgba(255,255,255,0.38); }
+    .section-header { max-width: 700px; margin: 0 auto 44px; text-align: center; }
+    .tag {
+      display: inline-block; background: rgba(43, 196, 222, 0.14); color: var(--primary-dark); border-radius: 999px;
+      padding: 8px 15px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px;
+    }
+    .section-header h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.18; margin-bottom: 14px; }
+    .section-header p { font-size: 16px; line-height: 1.75; color: var(--muted); }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 30px; }
+    .service-card {
+      background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px;
+      padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; transition: 0.3s;
+    }
+    .service-card:hover { transform: translateY(-5px); box-shadow: 0 24px 50px rgba(58, 48, 46, 0.15); }
+    .service-icon {
+      width: 56px; height: 56px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
+      background: rgba(43, 196, 222, 0.12); font-size: 28px;
+    }
+    .service-card h3 { font-size: 20px; }
+    .service-card p { color: var(--muted); line-height: 1.75; font-size: 14px; }
+    .service-card .btn-link {
+      margin-top: auto; background: none; border: none; color: var(--primary-dark); font-weight: 700; cursor: pointer; text-align: left; padding: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 15px;
+    }
+    .service-card .btn-link::after { content: "→"; transition: 0.2s; }
+    .service-card .btn-link:hover::after { transform: translateX(5px); }
+    .load-more-wrap { text-align: center; }
+
+    /* Teams */
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .team-card {
+      background: rgba(255,255,255,0.76); border: 1px solid rgba(255,255,255,0.62); border-radius: 26px;
+      padding: 18px; box-shadow: var(--shadow);
+    }
+    .team-photo, .team-placeholder { height: 280px; border-radius: 22px; object-fit: cover; width: 100%; background: linear-gradient(145deg, rgba(43,196,222,0.18), rgba(255,255,255,0.75)); }
+    .team-placeholder { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--muted); }
+    .team-placeholder .icon { font-size: 54px; }
+    .team-body { padding: 18px 6px 6px; }
+    .team-body h3 { font-size: 22px; margin-bottom: 6px; }
+    .team-role { color: var(--primary-dark); font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+    .team-body p { font-size: 14px; line-height: 1.75; color: var(--muted); }
+
+    /* Booking & Contact */
+    .booking-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
+    .info-card, .form-card, .contact-card, .social-card, .location-card {
+      background: rgba(255,255,255,0.76); border: 1px solid rgba(255,255,255,0.62);
+      border-radius: 28px; padding: 28px; box-shadow: var(--shadow);
+    }
+    .steps { display: grid; gap: 16px; margin-top: 24px; }
+    .step { display: flex; gap: 14px; align-items: flex-start; }
+    .step-num { width: 40px; height: 40px; border-radius: 14px; background: var(--primary); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+    .step p { color: var(--muted); font-size: 14px; line-height: 1.7; padding-top: 4px; }
+    .form-card h3, .contact-card h3, .social-card h3, .location-card h3 { font-size: 28px; margin-bottom: 10px; }
+    .form-card p, .contact-card p, .social-card p, .location-card p { color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
+    .form-grid { display: grid; gap: 14px; }
+    .form-grid input, .form-grid select, .form-grid textarea {
+      width: 100%; border: 1px solid var(--border); background: rgba(255,255,255,0.84); border-radius: 18px;
+      padding: 15px 16px; font-size: 14px; outline: none; transition: 0.3s;
+    }
+    .form-grid textarea { min-height: 120px; resize: vertical; }
+    .form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus { border-color: var(--primary-dark); box-shadow: 0 0 0 4px rgba(43, 196, 222, 0.15); }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .social-list { display: grid; gap: 14px; }
+    .social-link { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-radius: 20px; background: rgba(43,196,222,0.08); border: 1px solid rgba(43,196,222,0.10); }
+    .social-left { display: flex; align-items: center; gap: 12px; }
+    .social-icon { width: 46px; height: 46px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; background: var(--white); box-shadow: 0 8px 18px rgba(58, 48, 46, 0.08); }
+    .social-link strong { display: block; font-size: 15px; }
+    .social-link span { font-size: 13px; color: var(--muted); }
+    .social-arrow { color: var(--primary-dark); font-size: 18px; font-weight: 700; }
+
+    .map-box { border-radius: 22px; overflow: hidden; border: 1px solid rgba(58,48,46,0.08); }
+    .map-box iframe { width: 100%; height: 360px; border: 0; display: block; }
+
+    footer { padding: 34px 0 80px; color: #5f524f; }
+    .footer-box { background: rgba(255,255,255,0.56); border: 1px solid rgba(255,255,255,0.62); border-radius: 28px; padding: 24px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; }
+    .footer-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; } /* Tam yumru edildi */
+    .footer-brand strong { font-size: 22px; color: var(--primary-dark); }
+    .footer-box p { color: var(--muted); font-size: 14px; }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; background: rgba(58,48,46,0.5); display: none; align-items: center; justify-content: center; padding: 18px; z-index: 1200; backdrop-filter: blur(5px); }
+    .modal.show { display: flex; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal-card { width: min(850px, 100%); background: linear-gradient(180deg, #FFFDFC 0%, #F7EEEA 100%); border-radius: 28px; padding: 32px; box-shadow: 0 24px 80px rgba(0,0,0,0.18); position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-close-btn { position: absolute; top: 20px; right: 20px; width: 42px; height: 42px; border: none; border-radius: 50%; background: rgba(58,48,46,0.08); cursor: pointer; font-size: 18px; transition: 0.2s; }
+    .modal-close-btn:hover { background: rgba(58,48,46,0.15); }
+    .modal-split { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    .modal-info { padding-right: 10px; }
+    .modal-icon { width: 62px; height: 62px; border-radius: 20px; background: rgba(43,196,222,0.14); display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 16px; }
+    .modal-info h3 { font-size: 28px; margin-bottom: 12px; color: var(--primary-dark); }
+    .modal-info p { color: var(--muted); line-height: 1.8; margin-bottom: 16px; font-size: 15px; }
+    
+    /* WhatsApp Float */
+    .wa-float { position: fixed; right: 24px; bottom: 30px; width: 64px; height: 64px; background: var(--wa-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 28px rgba(37,211,102,0.4); z-index: 999; transition: 0.3s; }
+    .wa-float:hover { transform: scale(1.08); box-shadow: 0 16px 32px rgba(37,211,102,0.5); }
+    .wa-float svg { width: 34px; height: 34px; fill: white; }
+
+    /* Mobile Nav */
+    .mobile-nav { display: none; }
+
+    /* Mobile adjustments for hero text and layout */
+    @media (max-width: 1024px) {
+      .slider-container { height: 280px; }
+      .hero-inner, .booking-wrap, .contact-grid { grid-template-columns: 1fr; }
+      .services-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .slider-container { height: 220px; }
+      .nav-links, .top-actions .btn-outline { display: none; }
+      .services-grid, .team-grid, .hero-stats { grid-template-columns: 1fr; }
+      
+      /* Məhz mobil üçün hero yazılarının düzəldilməsi */
+      .hero { padding-top: 30px; }
+      .eyebrow { font-size: 12px; padding: 6px 14px; margin-bottom: 16px; display: inline-flex; }
+      .hero h1 { font-size: 28px; line-height: 1.25; margin-bottom: 14px; }
+      .hero p { font-size: 15px; margin-bottom: 22px; }
+
+      .modal-split { grid-template-columns: 1fr; gap: 20px; }
+      .form-card h3, .contact-card h3, .social-card h3, .location-card h3 { font-size: 24px; }
+      .footer-box { text-align: center; justify-content: center; }
+      body { padding-bottom: 90px; }
+      .wa-float { bottom: 100px; right: 20px; width: 56px; height: 56px; }
+      .wa-float svg { width: 28px; height: 28px; }
+      
+      .mobile-nav {
+        display: flex; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.05);
+        padding: 8px 12px; border-radius: 999px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        gap: 6px; z-index: 1000; align-items: center; width: max-content;
+      }
+      .mobile-nav a { font-size: 14px; font-weight: 700; color: var(--muted); padding: 12px 18px; border-radius: 999px; transition: 0.2s; }
+      .mobile-nav a.active, .mobile-nav a:active { background: var(--primary-dark); color: white; }
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <img src="/images/logo vet.jpg" alt="VetLife Logo" />
+        <div class="brand-text">VetLife</div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#services" data-i18n="nav_services">Xidmətlər</a></li>
+        <li><a href="#team" data-i18n="nav_team">Həkimlər</a></li>
+        <li><a href="#booking" data-i18n="nav_booking">Rezervasiya</a></li>
+        <li><a href="#contact" data-i18n="nav_contact">Əlaqə</a></li>
+      </ul>
+      <div class="top-actions">
+        <select id="langSwitcher" class="lang-switcher">
+          <option value="az">AZ</option>
+          <option value="en">EN</option>
+          <option value="ru">RU</option>
+        </select>
+        <a class="btn-outline" href="#booking" data-i18n="nav_btn_outline">Onlayn Rezerv</a>
+        <a class="btn" href="https://wa.me/994557485702" target="_blank">WhatsApp</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <div>
+        <div class="eyebrow"><span></span>7/24 veterinar dəstək</div>
+        <h1 data-i18n="hero_title">Heyvanınız üçün daha <em>yumşaq, etibarlı</em> və rahat tibbi qayğı</h1>
+        <p data-i18n="hero_desc">Sizin sadiq dostlarınızın sağlamlığı bizim üçün hər şeydən önəmlidir. Peşəkar komandamız və müasir avadanlıqlarımızla istənilən an xidmətinizdəyik.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#booking" data-i18n="hero_btn_book">Rezervasiya et</a>
+          <a class="btn-outline" href="#services" data-i18n="hero_btn_serv">Xidmətlərə bax</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="logo-panel">
+          <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+              <img src="/images/vet.jpeg" alt="VetLife Hospital komandası" />
+              <img src="/images/vet2.jpeg" alt="VetLife Hospital komandası" />
+            </div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>24/7</strong><span data-i18n="stat_1">Daim açıq</span></div>
+          <div class="stat"><strong>15+</strong><span data-i18n="stat_2">Xidmət</span></div>
+          <div class="stat"><strong>WA</strong><span data-i18n="stat_3">Sürətli müraciət</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag" data-i18n="sec_tag_serv">Xidmətlər</div>
+        <h2 data-i18n="sec_title_serv">Bizim Xidmətlər</h2>
+        <p data-i18n="sec_desc_serv">Evcil heyvanınız üçün ehtiyac duyulan bütün növ peşəkar baytarlıq xidmətlərini təqdim edirik. Formu dolduraraq sürətli müraciət edə bilərsiniz.</p>
+      </div>
+      
+      <div class="services-grid" id="servicesGrid"></div>
+      
+      <div class="load-more-wrap" id="loadMoreWrap">
+        <button class="btn-outline" id="loadMoreBtn" data-i18n="btn_load_more">Daha çox gör ↓</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft" id="team">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag" data-i18n="sec_tag_team">Komandamız</div>
+        <h2 data-i18n="sec_title_team">Həkimlər</h2>
+        <p data-i18n="sec_desc_team">Klinikamızın hər zaman köməyə hazır olan peşəkar və qayğıkeş tibbi personalı ilə tanış olun.</p>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <img class="team-photo" src="/images/vet.jpeg" alt="Kamran Mirzalıyev" />
+          <div class="team-body">
+            <h3>Kamran Mirzalıyev</h3>
+            <div class="team-role" data-i18n="role_1">Baş həkim</div>
+            <p data-i18n="desc_1">Klinik diaqnostika və ümumi baytarlıq idarəçiliyi üzrə xidmət göstərir.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <img class="team-photo" src="/images/vet2.jpeg" alt="Kilic Ulviya" />
+          <div class="team-body">
+            <h3>Kilic Ulviya</h3>
+            <div class="team-role" data-i18n="role_2">Reanimasiya həkimi</div>
+            <p data-i18n="desc_2">İntensiv terapiya, ağır pasiyent nəzarəti və təcili hallarda müdaxilə.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-placeholder">
+            <div class="icon">👤</div>
+          </div>
+          <div class="team-body">
+            <h3>Abul Baki</h3>
+            <div class="team-role" data-i18n="role_3">Ümumi həkim</div>
+            <p data-i18n="desc_3">Müayinə, müalicə planı və ümumi klinik dəstək üzrə xidmət göstərir.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="booking">
+    <div class="container booking-wrap">
+      <div class="info-card">
+        <div class="tag" data-i18n="sec_tag_book">Rezervasiya</div>
+        <h2 style="font-size: clamp(30px, 4vw, 42px); line-height: 1.18; margin-bottom: 12px;" data-i18n="sec_title_book">Onlayn Qəbul</h2>
+        <p data-i18n="sec_desc_book">Vaxtınıza qənaət etmək üçün asanlıqla qəbula yazıla bilərsiniz.</p>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><p data-i18n="step_1">Ad, telefon və heyvan haqqında məlumatı yaz.</p></div>
+          <div class="step"><div class="step-num">2</div><p data-i18n="step_2">Xidmət və tarix seç.</p></div>
+          <div class="step"><div class="step-num">3</div><p data-i18n="step_3">WhatsApp-a avtomatik yönləndirilmə baş verir.</p></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3 data-i18n="form_title">Rezervasiya Formu</h3>
+        <p data-i18n="form_desc">Məlumatlarınızı daxil edərək qısa müddətdə bizimlə əlaqə yaradın.</p>
+        <form class="form-grid" id="mainBookingForm">
+          <input type="text" id="mainOwner" placeholder="Ad və soyad" data-i18n-ph="ph_name" required>
+          <input type="text" id="mainPhone" placeholder="Telefon nömrəsi" data-i18n-ph="ph_phone" required>
+          <input type="text" id="mainPet" placeholder="Heyvanın növü / adı" data-i18n-ph="ph_pet" required>
+          <select id="mainService" required>
+            <option value="" data-i18n="ph_serv">Xidmət seçin</option>
+            <option>Müayinə</option>
+            <option>Vaksinasiya</option>
+            <option>Təcili yardım</option>
+            <option>Evə gediş</option>
+            <option>Cərrahi əməliyyat</option>
+          </select>
+          <input type="date" id="mainDate" required>
+          <textarea id="mainNote" placeholder="Qısa qeyd" data-i18n-ph="ph_note"></textarea>
+          <button class="btn" type="submit" data-i18n="btn_submit">WhatsApp ilə göndər</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-card">
+        <div class="tag" data-i18n="sec_tag_contact">Əlaqə</div>
+        <h3 data-i18n="sec_title_contact">Bizimlə Əlaqə</h3>
+        <p data-i18n="sec_desc_contact">Hər hansı bir sualınız və ya təcili vəziyyət üçün bizə müraciət edin.</p>
+        <div class="social-list">
+          
+          <a class="social-link" href="tel:+994557485702">
+            <div class="social-left">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8c1.8 3.6 3 4.8 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.8.6 4.2.6.7 0 1.2.5 1.2 1.2V21c0 .7-.5 1.2-1.2 1.2C10 22.2 1.8 14 1.8 3.9 1.8 3.2 2.3 2.7 3 2.7h4.3c.7 0 1.2.5 1.2 1.2 0 1.4.2 2.8.6 4.2.1.4 0 .9-.3 1.2l-2.2 1.5Z" stroke="#2BC4DE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div><strong data-i18n="contact_call">Zəng</strong><span>+994 55 748 57 02</span></div>
+            </div>
+            <div class="social-arrow">→</div>
+          </a>
+
+          <a class="social-link" href="https://wa.me/994557485702" target="_blank">
+            <div class="social-left">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12.1 2.2A9.8 9.8 0 0 0 3.8 17.5L2 22l4.7-1.7a9.8 9.8 0 1 0 5.4-18.1Z" stroke="#2BC4DE" stroke-width="1.8"/><path d="M8.8 8.4c.2-.5.5-.5.8-.5h.7c.2 0 .5 0 .7.5.2.6.8 2 .9 2.1.1.2.1.4 0 .6-.1.2-.2.4-.4.5-.2.2-.3.4-.1.7.2.2.8 1.3 1.8 2.1 1.2 1 2.1 1.3 2.4 1.4.3.1.5.1.7-.1.2-.2.8-.9 1-.9.2-.1.5-.1.7 0 .2.1 1.5.7 1.8.8.3.2.5.2.6.4.1.2.1 1.1-.2 1.6-.3.5-1.6 1.5-3.6 1.3-2-.2-4.3-1.8-5.9-3.4-1.7-1.7-3.2-4.4-3-6.1.2-1.7 1.1-2.6 1.6-2.9Z" fill="#2BC4DE"/></svg>
+              </div>
+              <div><strong>WhatsApp</strong><span data-i18n="contact_wa">Sürətli mesaj göndər</span></div>
+            </div>
+            <div class="social-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+      
+      <div class="social-card">
+        <div class="tag" data-i18n="sec_tag_social">Sosial media</div>
+        <h3 data-i18n="sec_title_social">Hesablar</h3>
+        <p data-i18n="sec_desc_social">Yeniliklərdən xəbərdar olmaq üçün bizi izləyin.</p>
+        <div class="social-list">
+          
+          <a class="social-link" href="https://www.instagram.com/vetlife_hospital?igsh=MWVqc3I3dDkyNHppMQ==" target="_blank">
+            <div class="social-left">
+              <div class="social-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#2BC4DE" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="#2BC4DE" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="#2BC4DE"/></svg>
+              </div>
+              <div><strong>Instagram</strong><span>@vetlife_hospital</span></div>
+            </div>
+            <div class="social-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-box">
+      <div class="footer-brand">
+        <img src="/images/logo vet.jpg" alt="VetLife logo" />
+        <div>
+          <strong>VetLife Hospital</strong>
+          <p data-i18n="footer_desc">Sevimli dostlarınızın sağlamlığı üçün etibarlı ünvan.</p>
+        </div>
+      </div>
+      <p data-i18n="footer_copy">© 2025 VetLife Hospital. Bütün hüquqlar qorunur.</p>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/994557485702" class="wa-float" target="_blank" title="WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+  </a>
+
+  <nav class="mobile-nav">
+    <a href="#services" data-i18n="nav_services">Xidmət</a>
+    <a href="#team" data-i18n="nav_team">Həkim</a>
+    <a href="#booking" class="active" style="background: var(--primary-dark); color: white;" data-i18n="nav_booking">Rezerv</a>
+  </nav>
+
+  <div class="modal" id="serviceModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeModal">✕</button>
+      <div class="modal-split">
+        <div class="modal-info">
+          <div class="modal-icon" id="modalIcon">🩺</div>
+          <h3 id="modalTitle">Xidmət adı</h3>
+          <p id="modalDescription">Xidmət barədə ətraflı məlumat.</p>
+        </div>
+        <div class="modal-form">
+          <h3 style="font-size: 20px; margin-bottom: 14px;" data-i18n="form_title2">Qəbula yazılın</h3>
+          <form class="form-grid" id="serviceForm">
+            <input type="text" id="serviceOwner" placeholder="Ad və soyad" data-i18n-ph="ph_name" required>
+            <input type="text" id="servicePhone" placeholder="Telefon nömrəsi" data-i18n-ph="ph_phone" required>
+            <input type="text" id="servicePet" placeholder="Heyvanın növü / adı" data-i18n-ph="ph_pet" required>
+            <input type="text" id="serviceSelected" readonly style="background: rgba(43,196,222,0.1); font-weight: bold; color: var(--primary-dark);">
+            <textarea id="serviceNote" placeholder="Şikayət və ya qısa qeyd" data-i18n-ph="ph_note" style="min-height: 80px;"></textarea>
+            <button class="btn" type="submit" data-i18n="btn_submit">WhatsApp-a göndər</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- DICTIONARY FOR TRANSLATIONS ---
+    const dict = {
+      az: {
+        nav_services: "Xidmətlər", nav_team: "Həkimlər", nav_booking: "Rezervasiya", nav_contact: "Əlaqə", nav_btn_outline: "Onlayn Rezerv",
+        hero_eyebrow: "7/24 veterinar dəstək", hero_title: "Heyvanınız üçün daha <em>yumşaq, etibarlı</em> və rahat tibbi qayğı", hero_desc: "Sizin sadiq dostlarınızın sağlamlığı bizim üçün hər şeydən önəmlidir. Peşəkar komandamız və müasir avadanlıqlarımızla istənilən an xidmətinizdəyik.", hero_btn_book: "Rezervasiya et", hero_btn_serv: "Xidmətlərə bax",
+        stat_1: "Daim açıq", stat_2: "Xidmət", stat_3: "Sürətli müraciət",
+        sec_tag_serv: "Xidmətlər", sec_title_serv: "Bizim Xidmətlər", sec_desc_serv: "Evcil heyvanınız üçün ehtiyac duyulan bütün növ peşəkar baytarlıq xidmətlərini təqdim edirik.", btn_load_more: "Daha çox gör ↓", btn_detail: "Ətraflı",
+        sec_tag_team: "Komandamız", sec_title_team: "Həkimlər", sec_desc_team: "Klinikamızın hər zaman köməyə hazır olan peşəkar personalı.",
+        role_1: "Baş həkim", desc_1: "Klinik diaqnostika və ümumi baytarlıq idarəçiliyi.", role_2: "Reanimasiya həkimi", desc_2: "İntensiv terapiya və təcili hallarda müdaxilə.", role_3: "Ümumi həkim", desc_3: "Müayinə, müalicə planı və ümumi klinik dəstək.",
+        sec_tag_book: "Rezervasiya", sec_title_book: "Onlayn Qəbul", sec_desc_book: "Vaxtınıza qənaət etmək üçün asanlıqla qəbula yazıla bilərsiniz.", step_1: "Ad, telefon və heyvan haqqında məlumatı yaz.", step_2: "Xidmət və tarix seç.", step_3: "WhatsApp-a avtomatik yönləndirilmə baş verir.",
+        form_title: "Rezervasiya Formu", form_desc: "Məlumatlarınızı daxil edərək qısa müddətdə bizimlə əlaqə yaradın.", form_title2: "Qəbula yazılın",
+        ph_name: "Ad və soyad", ph_phone: "Telefon nömrəsi", ph_pet: "Heyvanın növü / adı", ph_serv: "Xidmət seçin", ph_note: "Qısa qeyd", btn_submit: "WhatsApp ilə göndər",
+        sec_tag_contact: "Əlaqə", sec_title_contact: "Bizimlə Əlaqə", sec_desc_contact: "Hər hansı bir sualınız üçün bizə müraciət edin.", contact_call: "Zəng", contact_wa: "Sürətli mesaj göndər",
+        sec_tag_social: "Sosial media", sec_title_social: "Hesablar", sec_desc_social: "Yeniliklərdən xəbərdar olmaq üçün bizi izləyin.",
+        footer_desc: "Sevimli dostlarınızın sağlamlığı üçün etibarlı ünvan.", footer_copy: "© 2025 VetLife Hospital. Bütün hüquqlar qorunur."
+      },
+      en: {
+        nav_services: "Services", nav_team: "Doctors", nav_booking: "Booking", nav_contact: "Contact", nav_btn_outline: "Online Booking",
+        hero_eyebrow: "24/7 Vet Support", hero_title: "Softer, <em>reliable</em> and comfortable medical care for your pet", hero_desc: "The health of your loyal friends is our top priority. We are at your service anytime with our professional team.", hero_btn_book: "Book Now", hero_btn_serv: "View Services",
+        stat_1: "Always Open", stat_2: "Services", stat_3: "Fast Response",
+        sec_tag_serv: "Services", sec_title_serv: "Our Services", sec_desc_serv: "We provide all kinds of professional veterinary services your pet needs.", btn_load_more: "Load More ↓", btn_detail: "Details",
+        sec_tag_team: "Our Team", sec_title_team: "Doctors", sec_desc_team: "Meet our professional and caring medical staff.",
+        role_1: "Chief Doctor", desc_1: "Clinical diagnostics and general veterinary management.", role_2: "Reanimation Doctor", desc_2: "Intensive care and emergency interventions.", role_3: "General Doctor", desc_3: "Examination, treatment plan, and general clinical support.",
+        sec_tag_book: "Booking", sec_title_book: "Online Appointment", sec_desc_book: "Save time by easily booking an appointment online.", step_1: "Enter your name, phone, and pet info.", step_2: "Select service and date.", step_3: "Automatic redirection to WhatsApp.",
+        form_title: "Booking Form", form_desc: "Enter your details to contact us shortly.", form_title2: "Book an Appointment",
+        ph_name: "Full Name", ph_phone: "Phone Number", ph_pet: "Pet type / name", ph_serv: "Select Service", ph_note: "Short note", btn_submit: "Send via WhatsApp",
+        sec_tag_contact: "Contact", sec_title_contact: "Contact Us", sec_desc_contact: "Reach out to us for any questions or emergencies.", contact_call: "Call", contact_wa: "Send quick message",
+        sec_tag_social: "Social Media", sec_title_social: "Accounts", sec_desc_social: "Follow us to stay updated with the latest news.",
+        footer_desc: "A reliable address for the health of your lovely friends.", footer_copy: "© 2025 VetLife Hospital. All rights reserved."
+      },
+      ru: {
+        nav_services: "Услуги", nav_team: "Врачи", nav_booking: "Запись", nav_contact: "Контакты", nav_btn_outline: "Онлайн Запись",
+        hero_eyebrow: "Ветеринарная поддержка 24/7", hero_title: "Более мягкий, <em>надежный</em> и комфортный уход за питомцем", hero_desc: "Здоровье ваших верных друзей для нас важнее всего. Наша профессиональная команда к вашим услугам в любой момент.", hero_btn_book: "Забронировать", hero_btn_serv: "Посмотреть услуги",
+        stat_1: "Всегда открыто", stat_2: "Услуги", stat_3: "Быстрый ответ",
+        sec_tag_serv: "Услуги", sec_title_serv: "Наши Услуги", sec_desc_serv: "Мы предоставляем все виды профессиональных ветеринарных услуг для вашего питомца.", btn_load_more: "Показать еще ↓", btn_detail: "Подробнее",
+        sec_tag_team: "Наша команда", sec_title_team: "Врачи", sec_desc_team: "Познакомьтесь с нашим профессиональным медицинским персоналом.",
+        role_1: "Главный врач", desc_1: "Клиническая диагностика и общее руководство.", role_2: "Врач-реаниматолог", desc_2: "Интенсивная терапия и экстренная помощь.", role_3: "Врач общей практики", desc_3: "Осмотр, план лечения и общая поддержка.",
+        sec_tag_book: "Бронирование", sec_title_book: "Онлайн Запись", sec_desc_book: "Сэкономьте время, записавшись на прием онлайн.", step_1: "Введите имя, телефон и данные о питомце.", step_2: "Выберите услугу и дату.", step_3: "Автоматический переход в WhatsApp.",
+        form_title: "Форма Записи", form_desc: "Введите ваши данные для быстрой связи с нами.", form_title2: "Записаться",
+        ph_name: "Имя и фамилия", ph_phone: "Номер телефона", ph_pet: "Вид / имя питомца", ph_serv: "Выберите услугу", ph_note: "Краткая заметка", btn_submit: "Отправить в WhatsApp",
+        sec_tag_contact: "Контакты", sec_title_contact: "Свяжитесь с нами", sec_desc_contact: "Свяжитесь с нами по любым вопросам.", contact_call: "Звонок", contact_wa: "Быстрое сообщение",
+        sec_tag_social: "Соцсети", sec_title_social: "Аккаунты", sec_desc_social: "Подписывайтесь, чтобы быть в курсе новостей.",
+        footer_desc: "Надежный адрес для здоровья ваших друзей.", footer_copy: "© 2025 VetLife Hospital. Все права защищены."
+      }
+    };
+
+    // Services translation object
+    const servicesData = {
+      az: [
+        { title: "Təcili yardım", icon: "🚑", short: "24/7 aktiv təcili veterinar yardım.", detail: "Ani halsızlıq, travma, nəfəs darlığı, zəhərlənmə və kritik vəziyyətlərdə komandamız sürətli və peşəkar müdaxilə üçün tam hazırdır." },
+        { title: "Evə gediş", icon: "🏠", short: "Həkimlərimiz birbaşa ünvana gəlir.", detail: "Daşınması çətin heyvanlar üçün ev şəraitində ilkin baxış, müayinə və yönləndirmə xidməti." },
+        { title: "Klinik müayinə", icon: "🩺", short: "Tam baxış və müalicə planı.", detail: "Ümumi klinik baxış zamanı dostunuzun orqanizmi yoxlanılır, simptomlar dəyərləndirilir və müalicə tərtib olunur." },
+        { title: "Vaksinasiya", icon: "💉", short: "Peyvənd və profilaktik qoruma.", detail: "Təhlükəli viruslardan qorunmaq üçün pişik və itlər üçün fərdi peyvənd proqramı." },
+        { title: "Cərrahiyyə", icon: "✂️", short: "Planlı və təcili cərrahiyyə.", detail: "Tam təchiz olunmuş steril əməliyyat blokumuzda xüsusi anesteziya ilə müdaxilələr." },
+        { title: "Reanimasiya", icon: "❤️‍🩹", short: "Ağır xəstələr üçün stasionar.", detail: "İntensiv terapiyaya ehtiyacı olan pasiyentlərin 24 saatlıq monitorinqi." },
+        { title: "Laboratoriya", icon: "🧪", short: "Qan analizi və sürətli nəticə.", detail: "Qanın ümumi və biokimyəvi göstəriciləri dəqiqəlliklə yoxlanılır." },
+        { title: "UZİ Diaqnostika", icon: "📡", short: "Müasir ultrasəs müayinəsi.", detail: "Daxili orqanların vəziyyətini müasir ultrasəs cihazı ilə ağrısız izləyirik." }
+      ],
+      en: [
+        { title: "Emergency", icon: "🚑", short: "24/7 active emergency vet care.", detail: "Our team is ready for rapid and professional intervention in critical situations like trauma or poisoning." },
+        { title: "Home Visit", icon: "🏠", short: "Doctors come to your address.", detail: "Initial examination and referral service at home for animals that are difficult to transport." },
+        { title: "Examination", icon: "🩺", short: "Full check-up and treatment plan.", detail: "During the clinical exam, your pet is checked, symptoms are evaluated, and a treatment plan is made." },
+        { title: "Vaccination", icon: "💉", short: "Vaccines and preventive care.", detail: "Individual vaccination programs for cats and dogs to protect against dangerous viruses." },
+        { title: "Surgery", icon: "✂️", short: "Planned and urgent surgeries.", detail: "Interventions with special anesthesia in our fully equipped sterile operating block." },
+        { title: "Reanimation", icon: "❤️‍🩹", short: "Inpatient care for severe cases.", detail: "24-hour monitoring of patients requiring intensive therapy." },
+        { title: "Laboratory", icon: "🧪", short: "Blood tests and fast results.", detail: "General and biochemical parameters of blood are accurately checked." },
+        { title: "Ultrasound", icon: "📡", short: "Modern ultrasound diagnostics.", detail: "Painless monitoring of internal organs with modern ultrasound equipment." }
+      ],
+      ru: [
+        { title: "Скорая помощь", icon: "🚑", short: "Круглосуточная экстренная помощь.", detail: "Наша команда готова к быстрому вмешательству в критических ситуациях, таких как травмы или отравления." },
+        { title: "Вызов на дом", icon: "🏠", short: "Врачи приезжают по вашему адресу.", detail: "Первичный осмотр на дому для животных, которых сложно транспортировать." },
+        { title: "Осмотр", icon: "🩺", short: "Полный осмотр и план лечения.", detail: "Осмотр организма, оценка симптомов и составление индивидуального плана лечения." },
+        { title: "Вакцинация", icon: "💉", short: "Прививки и профилактика.", detail: "Индивидуальные программы вакцинации кошек и собак для защиты от опасных вирусов." },
+        { title: "Хирургия", icon: "✂️", short: "Плановые и срочные операции.", detail: "Операции со специальной анестезией в нашем полностью оборудованном стерильном блоке." },
+        { title: "Реанимация", icon: "❤️‍🩹", short: "Стационар для тяжелых пациентов.", detail: "Круглосуточный мониторинг пациентов, нуждающихся в интенсивной терапии." },
+        { title: "Лаборатория", icon: "🧪", short: "Анализы крови и быстрые результаты.", detail: "Точная проверка общих и биохимических показателей крови." },
+        { title: "УЗИ Диагностика", icon: "📡", short: "Современное ультразвуковое исследование.", detail: "Безболезненное наблюдение за внутренними органами с помощью современного УЗИ аппарата." }
+      ]
+    };
+
+    // --- LANGUAGE SWITCHER LOGIC ---
+    const langSwitcher = document.getElementById("langSwitcher");
+    let currentLang = "az";
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      
+      // Update text nodes
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[lang][key]) el.innerHTML = dict[lang][key];
+      });
+      
+      // Update placeholders
+      document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+        const key = el.getAttribute("data-i18n-ph");
+        if (dict[lang][key]) el.placeholder = dict[lang][key];
+      });
+
+      // Re-render services with correct language
+      renderServices();
+    }
+
+    langSwitcher.addEventListener("change", (e) => {
+      applyLanguage(e.target.value);
+    });
+
+    // --- SERVICES & MODAL LOGIC ---
+    const servicesGrid = document.getElementById("servicesGrid");
+    const loadMoreBtn = document.getElementById("loadMoreBtn");
+    let visibleCount = 6; 
+
+    function renderServices() {
+      servicesGrid.innerHTML = "";
+      const currentServices = servicesData[currentLang];
+      const itemsToShow = currentServices.slice(0, visibleCount);
+      
+      itemsToShow.forEach((service, index) => {
+        const card = document.createElement("div");
+        card.className = "service-card";
+        card.innerHTML = `
+          <div class="service-icon">${service.icon}</div>
+          <h3>${service.title}</h3>
+          <p>${service.short}</p>
+          <button class="btn-link" data-index="${index}">${dict[currentLang].btn_detail}</button>
+        `;
+        servicesGrid.appendChild(card);
+      });
+
+      if (loadMoreBtn) {
+        if (visibleCount >= currentServices.length) {
+          document.getElementById("loadMoreWrap").style.display = "none";
+        } else {
+          document.getElementById("loadMoreWrap").style.display = "block";
+        }
+      }
+    }
+    
+    renderServices();
+
+    if(loadMoreBtn) {
+      loadMoreBtn.addEventListener("click", () => {
+        visibleCount = servicesData[currentLang].length;
+        renderServices();
+      });
+    }
+
+    // Modal
+    const modal = document.getElementById("serviceModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalIcon = document.getElementById("modalIcon");
+    const serviceSelected = document.getElementById("serviceSelected");
+
+    document.addEventListener("click", function(e) {
+      const trigger = e.target.closest("[data-index]");
+      if (trigger) {
+        const index = trigger.getAttribute("data-index");
+        const service = servicesData[currentLang][index];
+        if (!service) return;
+        
+        modalTitle.textContent = service.title;
+        modalDescription.textContent = service.detail;
+        modalIcon.textContent = service.icon;
+        serviceSelected.value = service.title;
+        
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+      if (e.target.id === "closeModal" || e.target.classList.contains("modal")) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeModal();
+    });
+
+    function closeModal() {
+      modal.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    // --- SLIDER ---
+    const track = document.getElementById('sliderTrack');
+    const slides = track.querySelectorAll('img');
+    let slideIndex = 0;
+    if(slides.length > 1) {
+      setInterval(() => {
+        slideIndex = (slideIndex + 1) % slides.length;
+        track.style.transform = `translateX(-${slideIndex * 100}%)`;
+      }, 3500); 
+    }
+
+    // --- WHATSAPP FORMS ---
+    const phoneNumber = "994557485702";
+    function openWhatsApp(message) {
+      const url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+      window.open(url, "_blank");
+    }
+
+    document.getElementById("serviceForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const message = `Salam!\nXidmət: ${document.getElementById("serviceSelected").value}\nAd: ${document.getElementById("serviceOwner").value.trim()}\nTelefon: ${document.getElementById("servicePhone").value.trim()}\nHeyvan: ${document.getElementById("servicePet").value.trim()}\nQeyd: ${document.getElementById("serviceNote").value.trim()}`;
+      openWhatsApp(message);
+      closeModal();
+    });
+
+    document.getElementById("mainBookingForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const message = `Salam!\nAd: ${document.getElementById("mainOwner").value.trim()}\nTelefon: ${document.getElementById("mainPhone").value.trim()}\nHeyvan: ${document.getElementById("mainPet").value.trim()}\nXidmət: ${document.getElementById("mainService").value}\nTarix: ${document.getElementById("mainDate").value}\nQeyd: ${document.getElementById("mainNote").value.trim()}`;
+      openWhatsApp(message);
+    });
+
+    // Mobile nav active states
+    const mobileLinks = document.querySelectorAll(".mobile-nav a");
+    mobileLinks.forEach(link => {
+      link.addEventListener("click", function() {
+        mobileLinks.forEach(l => { l.classList.remove("active"); l.style.background = "transparent"; l.style.color = "var(--muted)"; });
+        this.classList.add("active");
+        this.style.background = "var(--primary-dark)";
+        this.style.color = "white";
+      });
+    });
+  </script>
+</body>
+</html>
