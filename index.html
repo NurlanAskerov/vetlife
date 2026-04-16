@@ -51,7 +51,7 @@
     }
     .brand { display: flex; align-items: center; gap: 12px; }
     .brand img {
-      width: 52px; height: 52px; object-fit: cover; border-radius: 50%; /* Tam yumru edildi */
+      width: 52px; height: 52px; object-fit: cover; border-radius: 50%;
       background: rgba(255,255,255,0.5); padding: 3px;
     }
     .brand-text { font-size: 28px; font-weight: 700; color: var(--primary-dark); }
@@ -95,7 +95,7 @@
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px;
       background: rgba(255,255,255,0.55); color: var(--primary-dark); font-size: 13px; font-weight: 700;
-      margin-bottom: 18px; white-space: nowrap; /* Yazının 2 sətrə bölünməsinin qarşısını alır */
+      margin-bottom: 18px; white-space: nowrap;
     }
     .eyebrow span { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
     .hero h1 { font-size: clamp(32px, 5vw, 64px); line-height: 1.1; margin-bottom: 18px; }
@@ -204,13 +204,17 @@
     .social-link span { font-size: 13px; color: var(--muted); }
     .social-arrow { color: var(--primary-dark); font-size: 18px; font-weight: 700; }
 
-    .map-box { border-radius: 22px; overflow: hidden; border: 1px solid rgba(58,48,46,0.08); }
-    .map-box iframe { width: 100%; height: 360px; border: 0; display: block; }
+    /* Map Box styling */
+    .map-box { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid rgba(58,48,46,0.08); cursor: pointer; display: block; }
+    .map-box iframe { width: 100%; height: 360px; border: 0; display: block; pointer-events: none; }
+    .map-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.02); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
+    .map-box:hover .map-overlay { opacity: 1; background: rgba(43, 196, 222, 0.15); }
+    .map-overlay .btn { box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 
     footer { padding: 34px 0 80px; color: #5f524f; }
     .footer-box { background: rgba(255,255,255,0.56); border: 1px solid rgba(255,255,255,0.62); border-radius: 28px; padding: 24px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
     .footer-brand { display: flex; align-items: center; gap: 12px; }
-    .footer-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; } /* Tam yumru edildi */
+    .footer-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
     .footer-brand strong { font-size: 22px; color: var(--primary-dark); }
     .footer-box p { color: var(--muted); font-size: 14px; }
 
@@ -246,7 +250,6 @@
       .nav-links, .top-actions .btn-outline { display: none; }
       .services-grid, .team-grid, .hero-stats { grid-template-columns: 1fr; }
       
-      /* Məhz mobil üçün hero yazılarının düzəldilməsi */
       .hero { padding-top: 30px; }
       .eyebrow { font-size: 12px; padding: 6px 14px; margin-bottom: 16px; display: inline-flex; }
       .hero h1 { font-size: 28px; line-height: 1.25; margin-bottom: 14px; }
@@ -258,6 +261,10 @@
       body { padding-bottom: 90px; }
       .wa-float { bottom: 100px; right: 20px; width: 56px; height: 56px; }
       .wa-float svg { width: 28px; height: 28px; }
+
+      /* Mobile map adjustment */
+      .map-box iframe { height: 240px; }
+      .map-overlay { opacity: 1; background: transparent; align-items: flex-end; padding-bottom: 18px; }
       
       .mobile-nav {
         display: flex; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -467,6 +474,23 @@
         </div>
       </div>
     </div>
+
+    <div class="container" style="margin-top: 26px;">
+      <div class="location-card">
+        <div class="tag" data-i18n="sec_tag_location">Ünvan</div>
+        <h3 data-i18n="sec_title_location">Bizi xəritədə tapın</h3>
+        <p data-i18n="sec_desc_location">Klinikamıza yaxınlaşaraq heyvanlarınız üçün yerində xidmət ala bilərsiniz.</p>
+        
+        <a href="https://www.google.com/maps/search/?api=1&query=40.380000,49.837889" target="_blank" class="map-link">
+          <div class="map-box">
+            <iframe src="https://maps.google.com/maps?q=40.380000,49.837889&hl=az&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="map-overlay">
+              <span class="btn" data-i18n="btn_open_map">Google Maps-də aç</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
   </section>
 
   <footer>
@@ -531,6 +555,7 @@
         ph_name: "Ad və soyad", ph_phone: "Telefon nömrəsi", ph_pet: "Heyvanın növü / adı", ph_serv: "Xidmət seçin", ph_note: "Qısa qeyd", btn_submit: "WhatsApp ilə göndər",
         sec_tag_contact: "Əlaqə", sec_title_contact: "Bizimlə Əlaqə", sec_desc_contact: "Hər hansı bir sualınız üçün bizə müraciət edin.", contact_call: "Zəng", contact_wa: "Sürətli mesaj göndər",
         sec_tag_social: "Sosial media", sec_title_social: "Hesablar", sec_desc_social: "Yeniliklərdən xəbərdar olmaq üçün bizi izləyin.",
+        sec_tag_location: "Ünvan", sec_title_location: "Bizi xəritədə tapın", sec_desc_location: "Klinikamıza yaxınlaşaraq heyvanlarınız üçün yerində xidmət ala bilərsiniz.", btn_open_map: "Google Maps-də aç",
         footer_desc: "Sevimli dostlarınızın sağlamlığı üçün etibarlı ünvan.", footer_copy: "© 2025 VetLife Hospital. Bütün hüquqlar qorunur."
       },
       en: {
@@ -545,6 +570,7 @@
         ph_name: "Full Name", ph_phone: "Phone Number", ph_pet: "Pet type / name", ph_serv: "Select Service", ph_note: "Short note", btn_submit: "Send via WhatsApp",
         sec_tag_contact: "Contact", sec_title_contact: "Contact Us", sec_desc_contact: "Reach out to us for any questions or emergencies.", contact_call: "Call", contact_wa: "Send quick message",
         sec_tag_social: "Social Media", sec_title_social: "Accounts", sec_desc_social: "Follow us to stay updated with the latest news.",
+        sec_tag_location: "Location", sec_title_location: "Find us on the map", sec_desc_location: "Visit our clinic to get on-site care for your pets.", btn_open_map: "Open in Google Maps",
         footer_desc: "A reliable address for the health of your lovely friends.", footer_copy: "© 2025 VetLife Hospital. All rights reserved."
       },
       ru: {
@@ -559,6 +585,7 @@
         ph_name: "Имя и фамилия", ph_phone: "Номер телефона", ph_pet: "Вид / имя питомца", ph_serv: "Выберите услугу", ph_note: "Краткая заметка", btn_submit: "Отправить в WhatsApp",
         sec_tag_contact: "Контакты", sec_title_contact: "Свяжитесь с нами", sec_desc_contact: "Свяжитесь с нами по любым вопросам.", contact_call: "Звонок", contact_wa: "Быстрое сообщение",
         sec_tag_social: "Соцсети", sec_title_social: "Аккаунты", sec_desc_social: "Подписывайтесь, чтобы быть в курсе новостей.",
+        sec_tag_location: "Адрес", sec_title_location: "Найдите нас на карте", sec_desc_location: "Посетите нашу клинику, чтобы получить помощь на месте.", btn_open_map: "Открыть в Google Maps",
         footer_desc: "Надежный адрес для здоровья ваших друзей.", footer_copy: "© 2025 VetLife Hospital. Все права защищены."
       }
     };
