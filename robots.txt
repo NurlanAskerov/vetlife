@@ -1,0 +1,25 @@
+# VetLife Hospital — robots.txt
+# https://vetlife-hospital.com/
+ 
+User-agent: *
+Allow: /
+Disallow: /_vercel/
+Disallow: /api/
+ 
+# Google
+User-agent: Googlebot
+Allow: /
+ 
+# Google Image
+User-agent: Googlebot-Image
+Allow: /images/
+ 
+# Bing
+User-agent: Bingbot
+Allow: /
+ 
+# Yandex (Azərbaycan və Rusiya üçün vacibdir)
+User-agent: YandexBot
+Allow: /
+ 
+Sitemap: https://vetlife-hospital.com/sitemap.xml
